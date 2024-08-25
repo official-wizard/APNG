@@ -148,10 +148,10 @@ public class APNGSeparator {
      */
     public static ArrayList<BufferedImage> mergeFrames(ArrayList<Frame> frames, boolean includeFirst) {
         ArrayList<BufferedImage> list = new ArrayList<>();
-        list.add(frames.getFirst().image);
+        list.add(frames.get(0).image);
 
-        final int width = frames.getFirst().image.getWidth(),
-                height = frames.getFirst().image.getHeight(),
+        final int width = frames.get(0).image.getWidth(),
+                height = frames.get(0).image.getHeight(),
                 type = BufferedImage.TYPE_INT_ARGB;
         int x, y;
         byte dispose, blend;
@@ -161,7 +161,7 @@ public class APNGSeparator {
         bkg.setBackground(TRANSPARENT);
 
         if (!includeFirst)
-            frames.removeFirst();
+            frames.remove(0);
 
         for (Frame frame : frames) {
             var result = new BufferedImage(width, height, type);
