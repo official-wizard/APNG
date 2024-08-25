@@ -6,7 +6,7 @@
 
     <groupId>com.github.official-wizard</groupId>
     <artifactId>APNG</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9-beta</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
