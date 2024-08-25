@@ -1,21 +1,6 @@
 package com.librian.lib;
 
-public class NumeratorDenominatorPair {
-    private short denominator;
-    private short number;
-
-    public NumeratorDenominatorPair(short denominator, short number) {
-        this.denominator = denominator;
-        this.number = number;
-    }
-
-    public short getDenominator() {
-        return denominator;
-    }
-
-    public short getNumerator() {
-        return number;
-    }
+public record NumeratorDenominatorPair(short numerator, short denominator) {
 
     public static NumeratorDenominatorPair from(int milliseconds) {
         int gcd = gcd(1000, milliseconds);

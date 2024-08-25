@@ -128,7 +128,7 @@ public class APNGCollector {
         result.write(in.readNBytes(33));
 
         NumeratorDenominatorPair pair = NumeratorDenominatorPair.from(delayMilliseconds);
-        chunks.write(Chunk.createFcTL(index++, sImg.getWidth(), sImg.getHeight(), 0, 0, pair.getNumerator(), pair.getDenominator(), dispose, blend));
+        chunks.write(Chunk.createFcTL(index++, sImg.getWidth(), sImg.getHeight(), 0, 0, pair.numerator(), pair.denominator(), dispose, blend));
         chunks.write(in.readNBytes(in.available() - 12));
         ++frames;
     }
@@ -221,7 +221,7 @@ public class APNGCollector {
         in.skipNBytes(33);
 
         NumeratorDenominatorPair pair = NumeratorDenominatorPair.from(delayMilliseconds);
-        chunks.write(Chunk.createFcTL(index++, frame.getWidth(), frame.getHeight(), x, y, pair.getNumerator(), pair.getDenominator(), dispose, blend));
+        chunks.write(Chunk.createFcTL(index++, frame.getWidth(), frame.getHeight(), x, y, pair.numerator(), pair.denominator(), dispose, blend));
         chunks.write(Chunk.createFdAT(index++, in.readNBytes(in.available() - 12)));
         ++frames;
     }
