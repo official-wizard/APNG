@@ -87,6 +87,53 @@ public class APNGCollector {
     }
 
     /**
+     * Constructs an instance of an object that creates an APNG in which a static image is part of the animation.
+     *
+     * @param sImg        a static image that displays in a non-animated PNG decoder.
+     * @param plays       a number of times that this animation should play.
+     *                    If it is 0, the animation should play indefinitely.
+     * @param delayMilliseconds delay in milliseconds between each frame
+     * @param dispose     defines the type of frame area disposal to be done after rendering this frame.
+     *  <pre>
+     *  {@summary
+     *  APNG_DISPOSE_OP_NONE
+     *    no disposal is done on this frame before rendering the next; the contents of the output buffer are left as is.
+     *
+     *  APNG_DISPOSE_OP_BACKGROUND
+     *    the frame's region of the output buffer is to be cleared to fully transparent black before rendering the next frame.
+     *
+     *  APNG_DISPOSE_OP_PREVIOUS
+     *    the frame's region of the output buffer is to be reverted to the previous contents before rendering the next frame.}
+     *  </pre>
+     * @param blend       specifies whether the frame is to be alpha blended into the current output buffer content,
+     *                    or whether it should completely replace its region in the output buffer.
+     *  <pre>
+     *  {@summary
+     *  APNG_BLEND_OP_SOURCE
+     *    all color components of the frame, including alpha, overwrite the current contents of the frame's output buffer region.
+     *
+     *  APNG_BLEND_OP_OVER
+     *    the frame should be composited onto the output buffer based on its alpha.}
+     *  </pre>
+     * @throws IOException if an error occurs during writing or reading a static image.
+     */
+    public APNGCollector(BufferedImage sImg,
+                         int plays,
+                         int delayMilliseconds,
+                         byte dispose,
+                         byte blend) throws IOException {
+        this.plays = plays;
+
+        ByteArrayInputStream in = createPNGStream(sImg);
+        result.write(in.readNBytes(33));
+
+        NumeratorDenominatorPair pair = NumeratorDenominatorPair.from(delayMilliseconds);
+        chunks.write(Chunk.createFcTL(index++, sImg.getWidth(), sImg.getHeight(), 0, 0, pair.getNumerator(), pair.getDenominator(), dispose, blend));
+        chunks.write(in.readNBytes(in.available() - 12));
+        ++frames;
+    }
+
+    /**
      * Add frame in animation.
      *
      * @param frame       animation frame.
