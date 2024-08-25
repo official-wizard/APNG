@@ -164,7 +164,7 @@ public class APNGSeparator {
             frames.remove(0);
 
         for (Frame frame : frames) {
-            var result = new BufferedImage(width, height, type);
+            BufferedImage result = new BufferedImage(width, height, type);
 
             x = frame.x;
             y = frame.y;

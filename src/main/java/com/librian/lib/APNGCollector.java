@@ -134,6 +134,52 @@ public class APNGCollector {
     }
 
     /**
+     * Add frame in animation.
+     *
+     * @param frame       animation frame.
+     * @param x           define the x position of the following frame.
+     * @param y           define the y position of the following frame.
+     * @param delayMilliseconds   delay in milliseconds.
+     * @param dispose     defines the type of frame area disposal to be done after rendering this frame.
+     *  <pre>
+     *  {@summary
+     *  APNG_DISPOSE_OP_NONE
+     *    no disposal is done on this frame before rendering the next; the contents of the output buffer are left as is.
+     *
+     *  APNG_DISPOSE_OP_BACKGROUND
+     *    the frame's region of the output buffer is to be cleared to fully transparent black before rendering the next frame.
+     *
+     *  APNG_DISPOSE_OP_PREVIOUS
+     *    the frame's region of the output buffer is to be reverted to the previous contents before rendering the next frame.}
+     *  </pre>
+     * @param blend       specifies whether the frame is to be alpha blended into the current output buffer content,
+     *                    or whether it should completely replace its region in the output buffer.
+     *  <pre>
+     *  {@summary
+     *  APNG_BLEND_OP_SOURCE
+     *    all color components of the frame, including alpha, overwrite the current contents of the frame's output buffer region.
+     *
+     *  APNG_BLEND_OP_OVER
+     *    the frame should be composited onto the output buffer based on its alpha.}
+     *  </pre>
+     * @throws IOException if an error occurs during writing or reading a frame.
+     */
+    public void addFrame(BufferedImage frame,
+                         int x,
+                         int y,
+                         int delayMilliseconds,
+                         byte dispose,
+                         byte blend) throws IOException {
+        ByteArrayInputStream in = createPNGStream(frame);
+        in.skipNBytes(33);
+
+        NumeratorDenominatorPair pair = NumeratorDenominatorPair.from(delayMilliseconds);
+        chunks.write(Chunk.createFcTL(index++, frame.getWidth(), frame.getHeight(), x, y, pair.getNumerator(), pair.getDenominator(), dispose, blend));
+        chunks.write(Chunk.createFdAT(index++, in.readNBytes(in.available() - 12)));
+        ++frames;
+    }
+
+    /**
      * @return APNG stream in byte array.
      * @throws IOException if an error occurs during writing.
      */
